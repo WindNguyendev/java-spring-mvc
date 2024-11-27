@@ -40,6 +40,7 @@
                                     <li class="list-group-item">ID: ${id}</li>
                                     <li class="list-group-item">Email: ${user.email}</li>
                                     <li class="list-group-item">Full name: ${user.fullname}</li>
+                                    <li class="list-group-item">Full name: ${user.role.name}</li>
                                     <li class="list-group-item">Address: ${user.address}</li>
                                 </ul>
 

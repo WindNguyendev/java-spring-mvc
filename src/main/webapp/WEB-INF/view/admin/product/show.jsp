@@ -29,38 +29,14 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manager Users</h1>
+                                <h1 class="mt-4">Manager Product</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active">Product</li>
                                 </ol>
-                                <div class="container mt-5">
-                                    <div class="row">
-                                        <div class="col-12 mx-auto">
-                                            <div class="d-flex justify-content-between">
-                                                <h3>User Detail by id: ${id}</h3>
+                                <div>Table Product</div>
 
-                                                <br>
-
-
-                                            </div>
-                                            <div class="alert alert-danger" role="alert">
-                                                A simple danger alert—check it out!
-                                            </div>
-
-                                            <form:form method="post" action="/admin/user/delete"
-                                                modelAttribute="deleteUser">
-                                                <div class="mb-3" style="display: none;">
-                                                    <label class="form-label">Id:</label>
-                                                    <form:input type="text" value="${id}" class="form-control"
-                                                        path="id" />
-                                                </div>
-                                                <button class="btn btn-danger">Confirm</button>
-                                            </form:form>
-
-                                        </div>
-                                    </div>
-                                </div>
+                            </div>
                         </main>
                         <!-- footer -->
                         <jsp:include page="../layout/footer.jsp" />
