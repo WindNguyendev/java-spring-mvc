@@ -33,9 +33,11 @@
 
                             </div>
                             <div class="card" style="width: 60%;">
+                                <img class="card-img-top" src="/images/avatar/${user.avatar}" alt="Card image cap">
                                 <div class="card-header">
                                     User information
                                 </div>
+
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">ID: ${id}</li>
                                     <li class="list-group-item">Email: ${user.email}</li>

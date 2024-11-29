@@ -1,29 +1,25 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.repository.UserRepository;
+
 import vn.hoidanit.laptopshop.service.UploadSevice;
 import vn.hoidanit.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.ServletContext;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -58,8 +54,18 @@ public class UserController {
 
     @PostMapping(value = "/admin/user/create")
     public String CreateUserPage(Model model,
-            @ModelAttribute("newUser") User wind,
+            @ModelAttribute("newUser") @Valid User wind,
+            BindingResult newUserBindingResult,
             @RequestParam("hoidanitFile") MultipartFile file) {
+
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        }
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/create";
+        }
+
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(wind.getPassword());
         // this.userService.handleSaveUser(wind);
@@ -93,8 +99,16 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/update")
-    public String UpdateUser(Model model, @ModelAttribute("newUser") User wind) {
+    public String UpdateUser(Model model, @ModelAttribute("newUser") @Valid User wind,
+            BindingResult newUserBindingResult,
+            @RequestParam("hoidanitFile") MultipartFile file) {
         User user = this.userService.getDetailUserbyId(wind.getId());
+        if (wind != null) {
+            if (!file.isEmpty()) {
+                String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+                user.setAvatar(avatar);
+            }
+        }
         if (user != null) {
             user.setAddress(wind.getAddress());
             user.setFullname(wind.getFullname());
