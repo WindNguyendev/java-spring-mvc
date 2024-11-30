@@ -1,7 +1,11 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,10 +35,27 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-    public String getProduct(Model model) {
-        List<Product> lstProduct = this.productService.getAllProduct();
-        model.addAttribute("products", lstProduct);
-        return "/admin/product/show";
+    public String getProduct(Model model,
+            @RequestParam("page") Optional<String> pageOptional) {
+
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1;
+            }
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        Pageable pageable = PageRequest.of(page - 1, 2);
+        Page<Product> lstProduct = this.productService.getAllProduct(pageable);
+        List<Product> lts = lstProduct.getContent();
+        model.addAttribute("products", lts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", lstProduct.getTotalPages());
+        return "admin/product/show";
     }
 
     @GetMapping("/admin/product/create")
@@ -74,7 +95,7 @@ public class ProductController {
     public String getDetailProduct(Model model, @PathVariable long id) {
         Product product = this.productService.getProductByID(id);
         model.addAttribute("product", product);
-        return "/admin/product/detail";
+        return "admin/product/detail";
     }
 
     @PostMapping("/admin/product/update")
@@ -111,7 +132,7 @@ public class ProductController {
     public String getDeleteProductPage(Model model, @PathVariable long id) {
         model.addAttribute("id", id);
         model.addAttribute("product", this.productService.getProductByID(id));
-        return "/admin/product/delete";
+        return "admin/product/delete";
     }
 
     @PostMapping("/admin/product/delete")
